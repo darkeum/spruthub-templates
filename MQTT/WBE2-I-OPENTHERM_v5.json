@@ -1,0 +1,242 @@
+{
+	"name": "Котел",
+	"manufacturer": "Wirenboard",
+	"model": "WBE2-I-OPENTHERM",
+	"services": [
+		{
+			"name": "Отопление",
+			"type": "HeaterCooler",
+			"characteristics": [
+				{
+					"write": false,
+					"type": "Active",
+					"link": [
+						{
+							"type": "Integer",
+							"topicSearch": "/devices/(.*)/controls/Boiler Status",
+							"topicGet": "/devices/(1)/controls/Boiler Status",
+							"inFunc": "((('0000000000000000'+ Number(value).toString(2)).slice(-16)[14] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '1'))?1:0"
+						}
+					]
+				},
+				{
+					"write": false,
+					"type": "TargetHeaterCoolerState",
+					"link": {
+						"type": "Float",
+						"topicGet": "/devices/(1)/controls/Boiler CH mode",
+						"inFunc": "value>0?1:0",
+						"validValues": "1",
+						"write": false
+					}
+				},
+				{
+					"type": "TargetTemperature",
+					"link": {
+						"type": "Float",
+						"topicSearch": "/devices/(.*)/controls/Boiler Status",
+						"topicGet": "/devices/(1)/controls/Heating Setpoint",
+						"topicSet": "/devices/(1)/controls/Heating Setpoint/on"
+					},
+					"minValue": 40,
+					"maxValue": 75,
+					"minStep": 1
+				},
+				{
+					"type": "CurrentTemperature",
+					"link": {
+						"type": "Float",
+						"topicGet": "/devices/(1)/controls/Heating Temperature"
+					}
+				},
+				{
+					"type": "CurrentHeaterCoolerState",
+					"link": {
+						"type": "Integer",
+						"topicGet": "/devices/(1)/controls/Boiler Status",
+						"inFunc": "((('0000000000000000'+ Number(value).toString(2)).slice(-16)[14] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[7] === '1'))?2:(((('0000000000000000'+ Number(value).toString(2)).slice(-16)[14] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[7] === '1')))?1:(((('0000000000000000'+ Number(value).toString(2)).slice(-16)[14] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[7] === '1')))?1:(((('0000000000000000'+ Number(value).toString(2)).slice(-16)[14] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[7] === '1')))?1:0"
+					}
+				}
+			]
+		},
+		{
+			"name": "ГВС",
+			"type": "HeaterCooler",
+			"characteristics": [
+				{
+					"write": false,
+					"type": "Active",
+					"link": {
+						"type": "Integer",
+						"topicSearch": "/devices/(.*)/controls/Boiler Status",
+						"topicGet": "/devices/(1)/controls/Boiler Status",
+						"inFunc": "((('0000000000000000'+ Number(value).toString(2)).slice(-16)[13] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '1'))?1:0"
+					}
+				},
+				{
+					"write": false,
+					"type": "TargetHeaterCoolerState",
+					"link": {
+						"type": "Float",
+						"topicGet": "/devices/(1)/controls/Boiler DHW mode",
+						"inFunc": "value>0?1:0",
+						"validValues": "1"
+					}
+				},
+				{
+					"type": "TargetTemperature",
+					"link": {
+						"type": "Float",
+						"topicSearch": "/devices/(.*)/controls/Boiler Status",
+						"topicGet": "/devices/(1)/controls/Hot Water Setpoint",
+						"topicSet": "/devices/(1)/controls/Hot Water Setpoint/on"
+					},
+					"minValue": 35,
+					"maxValue": 60,
+					"minStep": 1
+				},
+				{
+					"type": "CurrentTemperature",
+					"link": {
+						"type": "Float",
+						"topicGet": "/devices/(1)/controls/Heating Temperature"
+					}
+				},
+				{
+					"type": "CurrentHeaterCoolerState",
+					"link": {
+						"type": "Integer",
+						"topicGet": "/devices/(1)/controls/Boiler Status",
+						"inFunc": "((('0000000000000000'+ Number(value).toString(2)).slice(-16)[13] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[6] === '1'))?2:(((('0000000000000000'+ Number(value).toString(2)).slice(-16)[13] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[6] === '1')))?1:(((('0000000000000000'+ Number(value).toString(2)).slice(-16)[13] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[6] === '1')))?1:(((('0000000000000000'+ Number(value).toString(2)).slice(-16)[13] === '0') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[12] === '1') && (('0000000000000000'+ Number(value).toString(2)).slice(-16)[6] === '1')))?1:0"
+					}
+				}
+			]
+		}
+	],
+	"options": [
+		{
+			"name": "Статус котла",
+			"description": "Информация о статусе котла из WBE2-I-OPENTHERM",
+			"type": "String",
+			"write": false,
+			"link": {
+				"type": "Integer",
+				"topicSearch": "/devices/(.*)/controls/Boiler Status",
+				"topicGet": "/devices/(1)/controls/Boiler Status"
+			}
+		},
+		{
+			"name": "Ошибка связи с котлом",
+			"type": "Boolean",
+			"write": false,
+			"link": {
+				"type": "Boolean",
+				"topicGet": "/devices/(1)/controls/Invalid Connection"
+			}
+		},
+		{
+			"name": "Состояние горелки котла",
+			"type": "Boolean",
+			"write": false,
+			"link": {
+				"type": "Boolean",
+				"topicGet": "/devices/(1)/controls/Boiler Flame Status"
+			}
+		},
+		{
+			"name": "Состояние контура отопления котла",
+			"type": "Boolean",
+			"write": false,
+			"link": {
+				"type": "Boolean",
+				"topicGet": "/devices/(1)/controls/Boiler CH mode"
+			}
+		},
+		{
+			"name": "Состояние контура ГВС котла",
+			"type": "Boolean",
+			"write": false,
+			"link": {
+				"type": "Boolean",
+				"topicGet": "/devices/(1)/controls/Boiler DHW mode"
+			}
+		},
+		{
+			"name": "Разрешения на работу контура отопления котла",
+			"type": "Boolean",
+			"write": false,
+			"link": {
+				"type": "Boolean",
+				"topicGet": "/devices/(1)/controls/Master CH enable"
+			}
+		},
+		{
+			"name": "Разрешения на работу контура ГВС котла",
+			"type": "Boolean",
+			"write": false,
+			"link": {
+				"type": "Boolean",
+				"topicGet": "/devices/(1)/controls/Master DHW enable"
+			}
+		},
+		{
+			"name": "Min t° отопления котла",
+			"type": "Double",
+			"write": false,
+			"link": {
+				"type": "Double",
+				"topicGet": "/devices/(1)/controls/Heating Setpoint Min"
+			}
+		},
+		{
+			"name": "Max t° отопления котла",
+			"type": "Double",
+			"write": false,
+			"link": {
+				"type": "Double",
+				"topicGet": "/devices/(1)/controls/Heating Setpoint Max"
+			}
+		},
+		{
+			"name": "Min t° ГВС котла",
+			"type": "Double",
+			"write": false,
+			"link": {
+				"type": "Double",
+				"topicGet": "/devices/(1)/controls/Hot Water Setpoint Min"
+			}
+		},
+		{
+			"name": "Max t° ГВС котла",
+			"type": "Double",
+			"write": false,
+			"link": {
+				"type": "Double",
+				"topicGet": "/devices/(1)/controls/Hot Water Setpoint Max"
+			}
+		},
+		{
+			"name": "Аварии котла",
+			"type": "String",
+			"write": false,
+			"link": {
+				"type": "Integer",
+				"topicGet": "/devices/(1)/controls/Boiler fault indication",
+				"map": {
+					"Нет ошибок": 0,
+					"Отсутствует газ": 10,
+					"Отсутствует датчик температуры ГВС": 13
+				}
+			}
+		},
+		{
+			"name": "Версия прошивки",
+			"type": "String",
+			"write": false,
+			"link": {
+				"type": "String",
+				"topicGet": "/devices/(1)/controls/FW Version"
+			}
+		}
+	]
+}
